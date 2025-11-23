@@ -35,143 +35,136 @@
        up to the <script> tag. The script below is the modified part. -->
 
   <script>
-    // --- CLIENT: Server-forwarded model approach ---
-    // The client no longer runs the rule engine; it POSTS user text to /api/interpret.
-    // The Netlify function returns { facts, event, meta }.
+/*
+  DOM-ready wrapper: ensures elements exist before we query/attach listeners.
+  Also keeps client as a thin caller to /api/interpret.
+*/
+document.addEventListener('DOMContentLoaded', function () {
+  // Elements (get references after DOM ready)
+  const chatMessages = document.getElementById('chat-messages');
+  const userInput = document.getElementById('user-input');
 
-    // Elements
-    const chatMessages = document.getElementById('chat-messages');
-    const userInput = document.getElementById('user-input');
+  // Typing indicator helpers
+  function showTyping() {
+    if (!chatMessages) return;
+    const typingDiv = document.createElement('div');
+    typingDiv.className = 'chat-bubble-ai typing-indicator';
+    typingDiv.id = 'typing-indicator';
+    typingDiv.innerHTML = '<span class="typing-dot"></span><span class="typing-dot"></span><span class="typing-dot"></span>';
+    chatMessages.appendChild(typingDiv);
+    scrollToBottom();
+  }
+  function removeTyping() {
+    const typing = document.getElementById('typing-indicator');
+    if (typing) typing.remove();
+  }
+  function scrollToBottom() {
+    if (!chatMessages) return;
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+  }
+  function addAiMessage(html) {
+    if (!chatMessages) return;
+    const bubble = document.createElement('div');
+    bubble.className = 'chat-bubble-ai';
+    bubble.innerHTML = html;
+    chatMessages.appendChild(bubble);
+    scrollToBottom();
+  }
+  function addUserMessage(text) {
+    if (!chatMessages) return;
+    const bubble = document.createElement('div');
+    bubble.className = 'chat-bubble-user';
+    bubble.innerText = text;
+    chatMessages.appendChild(bubble);
+    scrollToBottom();
+  }
 
-    // Typing indicator helpers (preserved)
-    function showTyping() {
-      const typingDiv = document.createElement('div');
-      typingDiv.className = 'chat-bubble-ai typing-indicator';
-      typingDiv.id = 'typing-indicator';
-      typingDiv.innerHTML = '<span class="typing-dot"></span><span class="typing-dot"></span><span class="typing-dot"></span>';
-      chatMessages.appendChild(typingDiv);
-      scrollToBottom();
-    }
-    function removeTyping() {
-      const typing = document.getElementById('typing-indicator');
-      if (typing) typing.remove();
-    }
-    function scrollToBottom() {
-      chatMessages.scrollTop = chatMessages.scrollHeight;
-    }
-    function addAiMessage(html) {
-      const bubble = document.createElement('div');
-      bubble.className = 'chat-bubble-ai';
-      bubble.innerHTML = html;
-      chatMessages.appendChild(bubble);
-      scrollToBottom();
-    }
-    function addUserMessage(text) {
-      const bubble = document.createElement('div');
-      bubble.className = 'chat-bubble-user';
-      bubble.innerText = text;
-      chatMessages.appendChild(bubble);
-      scrollToBottom();
-    }
+  // Format server response into UI
+  function formatInterpretation(serverResp) {
+    const facts = (serverResp && serverResp.facts) || {};
+    const event = (serverResp && serverResp.event) || null;
 
-    // Format server response into the same visual block you had earlier
-    function formatInterpretation(serverResp) {
-      // serverResp = { facts: {mount, sign, confidence}, event: {...} | null, meta: {...} }
-      const facts = serverResp.facts || {};
-      const event = serverResp.event || null;
+    if (event && event.type === 'reading_match') {
+      const r = event.params;
+      return `
+        <span class="text-amber-500 font-bold uppercase text-xs tracking-widest">${r.planet}</span>
+        <p class="text-gray-400 text-[10px] mb-2">Activation Age: ${r.age}</p>
+        <p class="mb-3">${r.prediction}</p>
+        <div class="bg-amber-900/20 border-l-2 border-amber-500 p-2 mt-2">
+          <p class="text-xs text-amber-200"><strong>Lal Kitab Remedy:</strong> ${r.remedy}</p>
+        </div>
+      `;
+    } else if (event && event.type === 'no_sign_match') {
+      return `<p>${event.params.message}</p><p class="text-gray-500 text-sm mt-3">Try asking about another sign like <strong>Star, Cross, or Vertical Line</strong>.</p>`;
+    } else {
+      const mountLabel = facts.mount ? facts.mount.toUpperCase() : 'Unknown';
+      const signLabel = facts.sign ? facts.sign.toUpperCase() : 'Unknown';
+      const confidence = typeof facts.confidence === 'number' ? facts.confidence.toFixed(2) : '0.00';
+      return `
+        <p class="text-gray-200 mb-2"><strong>Detected</strong> — Mount: <span class="text-amber-500">${mountLabel}</span>, Sign: <span class="text-amber-500">${signLabel}</span></p>
+        <p class="text-gray-400 text-sm mb-2">Confidence: ${confidence}</p>
+        <p class="text-gray-400 text-sm">I couldn't find a precise Lal Kitab match for that combination. Try asking about a specific sign (e.g., <strong>"Star on Sun"</strong>).</p>
+      `;
+    }
+  }
 
-      if (event && event.type === 'reading_match') {
-        const r = event.params;
-        return `
-          <span class="text-amber-500 font-bold uppercase text-xs tracking-widest">${r.planet}</span>
-          <p class="text-gray-400 text-[10px] mb-2">Activation Age: ${r.age}</p>
-          <p class="mb-3">${r.prediction}</p>
-          <div class="bg-amber-900/20 border-l-2 border-amber-500 p-2 mt-2">
-            <p class="text-xs text-amber-200"><strong>Lal Kitab Remedy:</strong> ${r.remedy}</p>
-          </div>
-        `;
-      } else if (event && event.type === 'no_sign_match') {
-        return `<p>${event.params.message}</p><p class="text-gray-500 text-sm mt-3">Try asking about another sign like <strong>Star, Cross, or Vertical Line</strong>.</p>`;
-      } else {
-        // no deterministic reading — present detected facts and a helpful prompt
-        const mountLabel = facts.mount ? facts.mount.toUpperCase() : 'Unknown';
-        const signLabel = facts.sign ? facts.sign.toUpperCase() : 'Unknown';
-        const confidence = typeof facts.confidence === 'number' ? facts.confidence.toFixed(2) : '0.00';
-        return `
-          <p class="text-gray-200 mb-2"><strong>Detected</strong> — Mount: <span class="text-amber-500">${mountLabel}</span>, Sign: <span class="text-amber-500">${signLabel}</span></p>
-          <p class="text-gray-400 text-sm mb-2">Confidence: ${confidence}</p>
-          <p class="text-gray-400 text-sm">I couldn't find a precise Lal Kitab match for that combination. Try asking about a specific sign (e.g., <strong>"Star on Sun"</strong>).</p>
-        `;
+  // sendMessage calls the serverless endpoint
+  async function sendMessage() {
+    const text = (userInput && userInput.value || '').trim();
+    if (!text) return;
+
+    addUserMessage(text);
+    if (userInput) userInput.value = '';
+    showTyping();
+
+    try {
+      const resp = await fetch('/api/interpret', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ text })
+      });
+
+      removeTyping();
+
+      if (!resp.ok) {
+        let errText = `The oracle is silent (status ${resp.status})`;
+        try {
+          const j = await resp.json();
+          if (j && j.error) errText = `Error: ${j.error}`;
+        } catch (_) {}
+        addAiMessage(`<p>${errText}</p>`);
+        return;
       }
+
+      const data = await resp.json();
+      const html = formatInterpretation(data);
+      addAiMessage(html);
+    } catch (err) {
+      removeTyping();
+      console.error('fetch /api/interpret error', err);
+      addAiMessage('<p>The oracle could not be reached. Please try again later.</p>');
     }
+  }
 
-    // --- sendMessage now calls the server endpoint ---
-    async function sendMessage() {
-      const text = (userInput && userInput.value || '').trim();
-      if (!text) return;
+  /* Keep other UI helpers (scrollToReader, scrollToServices, toggleMobileMenu, startSimulation, resetSimulation)
+     — these functions mostly interact with DOM elements that now exist because we're inside DOMContentLoaded.
+     If any of those functions reference elements at definition time, they will now succeed.
+  */
+  // expose sendMessage so the UI button can call it
+  window.sendMessage = sendMessage;
 
-      addUserMessage(text);
-      userInput.value = '';
-      showTyping();
-
-      try {
-        const resp = await fetch('/api/interpret', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ text })
-        });
-
-        removeTyping();
-
-        if (!resp.ok) {
-          // Try to parse error message if any
-          let errText = `The oracle is silent (status ${resp.status})`;
-          try {
-            const j = await resp.json();
-            if (j && j.error) errText = `Error: ${j.error}`;
-          } catch (_) {}
-          addAiMessage(`<p>${errText}</p>`);
-          return;
-        }
-
-        const data = await resp.json();
-        // data: { facts, event, meta }
-        const html = formatInterpretation(data);
-        addAiMessage(html);
-      } catch (err) {
-        removeTyping();
-        console.error('fetch /api/interpret error', err);
-        addAiMessage('<p>The oracle could not be reached. Please try again later.</p>');
-      }
-    }
-
-    // Preserve existing helpers (scan/upload/chat UX) from your file:
-    function scrollToReader() { document.getElementById('reader-app').scrollIntoView({ behavior: 'smooth' }); }
-    function scrollToServices() { document.getElementById('readings').scrollIntoView({ behavior: 'smooth' }); }
-    function toggleMobileMenu() {
-      const menu = document.getElementById('mobile-menu');
-      const body = document.body;
-      if (menu.classList.contains('opacity-0')) {
-        menu.classList.remove('opacity-0','pointer-events-none'); body.classList.add('overflow-hidden');
-      } else {
-        menu.classList.add('opacity-0','pointer-events-none'); body.classList.remove('overflow-hidden');
-      }
-    }
-
-    // (Start/Reset simulation functions and other UI code unchanged — paste your existing implementations here)
-    // To keep this message concise I did not repeat every helper; keep your original startSimulation/resetSimulation/upload logic.
-    // In your file ensure the following functions from your original file remain exactly as before:
-    // startSimulation(), resetSimulation(), addAiMessage(), addUserMessage(), showTyping(), removeTyping(), scrollToBottom()
-    // and the file upload event listeners.
-
-    // --- File upload & other listeners (kept from your original file) ---
-    // Trigger hidden file input when scan area is clicked
-    document.getElementById('scan-area').addEventListener('click', () => {
-      document.getElementById('file-upload').click();
+  // FILE UPLOAD + EVENT LISTENERS (guarded)
+  const scanArea = document.getElementById('scan-area');
+  if (scanArea) {
+    scanArea.addEventListener('click', () => {
+      const fileInput = document.getElementById('file-upload');
+      if (fileInput) fileInput.click();
     });
+  }
 
-    // Load selected file
-    document.getElementById('file-upload').addEventListener('change', function(event) {
+  const fileUploadInput = document.getElementById('file-upload');
+  if (fileUploadInput) {
+    fileUploadInput.addEventListener('change', function(event) {
       const handImage = document.getElementById('hand-image');
       const uploadState = document.getElementById('upload-state');
       const btnScan = document.getElementById('btn-scan');
@@ -179,33 +172,41 @@
       if (event.target.files && event.target.files[0]) {
         const reader = new FileReader();
         reader.onload = (e) => {
-          handImage.src = e.target.result;
-          handImage.style.opacity = '0.8';
-          uploadState.style.opacity = '0';
-          btnScan.disabled = false;
-          btnScan.innerText = 'Analyze Palm';
-          btnScan.classList.remove('opacity-50', 'cursor-not-allowed');
+          if (handImage) {
+            handImage.src = e.target.result;
+            handImage.style.opacity = '0.8';
+          }
+          if (uploadState) uploadState.style.opacity = '0';
+          if (btnScan) {
+            btnScan.disabled = false;
+            btnScan.innerText = 'Analyze Palm';
+            btnScan.classList.remove('opacity-50', 'cursor-not-allowed');
+          }
         };
         reader.readAsDataURL(event.target.files[0]);
       }
     });
+  }
 
-    // Allow Enter to send message
-    if (userInput) userInput.addEventListener('keypress', function(e) { if (e.key === 'Enter') sendMessage(); });
-
-    // Navbar scroll effect (kept)
-    window.addEventListener('scroll', () => {
-      const navbar = document.getElementById('navbar');
-      if (window.scrollY > 50) {
-        navbar.classList.add('bg-[#0a0a0c]/90','backdrop-blur-lg','border-b','border-white/5');
-      } else {
-        navbar.classList.remove('bg-[#0a0a0c]/90','backdrop-blur-lg','border-b','border-white/5');
-      }
+  if (userInput) {
+    userInput.addEventListener('keypress', function (e) {
+      if (e.key === 'Enter') sendMessage();
     });
+  }
 
-    // Expose sendMessage globally for your button
-    window.sendMessage = sendMessage;
-    // Also keep startSimulation/resetSimulation names intact if your buttons call them (they exist in original file)
-  </script>
+  // Navbar scroll effect (unchanged)
+  window.addEventListener('scroll', () => {
+    const navbar = document.getElementById('navbar');
+    if (!navbar) return;
+    if (window.scrollY > 50) {
+      navbar.classList.add('bg-[#0a0a0c]/90','backdrop-blur-lg','border-b','border-white/5');
+    } else {
+      navbar.classList.remove('bg-[#0a0a0c]/90','backdrop-blur-lg','border-b','border-white/5');
+    }
+  });
+
+  // If your original file defines startSimulation/resetSimulation elsewhere, they will still work.
+}); // end DOMContentLoaded
+</script>
 </body>
 </html>
