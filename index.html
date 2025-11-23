@@ -1,0 +1,772 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Astrolens | Modern Palmistry</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,400&family=Manrope:wght@200;400;600&display=swap" rel="stylesheet">
+    
+    <style>
+        /* Custom Font Config */
+        :root {
+            --font-heading: 'Cormorant Garamond', serif;
+            --font-body: 'Manrope', sans-serif;
+            --color-gold: #D4AF37;
+            --color-bg: #0a0a0c;
+            --color-surface: #141418;
+        }
+
+        body {
+            font-family: var(--font-body);
+            background-color: var(--color-bg);
+            color: #e2e2e2;
+            overflow-x: hidden;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            font-family: var(--font-heading);
+        }
+
+        /* Smooth Scroll & Scrollbar */
+        html { scroll-behavior: smooth; }
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: var(--color-bg); }
+        ::-webkit-scrollbar-thumb { background: #333; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--color-gold); }
+
+        /* Animations */
+        .fade-in-up { animation: fadeInUp 1s ease-out forwards; opacity: 0; transform: translateY(30px); }
+        @keyframes fadeInUp { to { opacity: 1; transform: translateY(0); } }
+        .delay-100 { animation-delay: 0.1s; }
+        .delay-300 { animation-delay: 0.3s; }
+        .delay-500 { animation-delay: 0.5s; }
+
+        /* Scanning Animation */
+        .scanner-line {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: var(--color-gold);
+            box-shadow: 0 0 15px var(--color-gold);
+            animation: scan 3s infinite linear;
+            display: none;
+        }
+        @keyframes scan {
+            0% { top: 0; opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { top: 100%; opacity: 0; }
+        }
+
+        /* Mystical Background Noise */
+        .grain-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 50; opacity: 0.04;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+        }
+        
+        /* Button Styles */
+        .btn-luxury {
+            transition: all 0.4s ease; position: relative; overflow: hidden; z-index: 1;
+        }
+        .btn-luxury::after {
+            content: ''; position: absolute; bottom: 0; left: 0; width: 100%; height: 0%; background-color: #fff; transition: all 0.4s ease; z-index: -1;
+        }
+        .btn-luxury:hover::after { height: 100%; }
+        .btn-luxury:hover { color: #000; }
+
+        .btn-magic {
+            background: linear-gradient(135deg, var(--color-gold), #a855f7);
+            border: none; color: white; position: relative; z-index: 1; overflow: hidden; transition: all 0.4s ease;
+        }
+        .btn-magic::before {
+            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(135deg, #a855f7, var(--color-gold)); opacity: 0; z-index: -1; transition: opacity 0.4s ease;
+        }
+        .btn-magic:hover::before { opacity: 1; }
+        .btn-magic:hover { box-shadow: 0 0 20px rgba(168, 85, 247, 0.5); transform: translateY(-2px); }
+
+        /* Glassmorphism */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        /* Loaders & Spinners */
+        .spinner {
+            border: 3px solid rgba(255,255,255,0.1); border-radius: 50%; border-top: 3px solid var(--color-gold); width: 40px; height: 40px; animation: spin 1s linear infinite;
+        }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+        .mystical-spinner {
+            width: 80px; height: 80px; border: 2px solid transparent; border-top-color: var(--color-gold); border-right-color: #a855f7; border-radius: 50%; animation: spin 3s linear infinite; position: relative;
+        }
+        .mystical-spinner::before {
+            content: ''; position: absolute; top: 5px; left: 5px; right: 5px; bottom: 5px; border: 2px solid transparent; border-top-color: #a855f7; border-right-color: var(--color-gold); border-radius: 50%; animation: spin 2s linear infinite reverse;
+        }
+        .mystical-spinner::after {
+            content: ''; position: absolute; top: 15px; left: 15px; right: 15px; bottom: 15px; border: 2px solid transparent; border-top-color: var(--color-gold); border-radius: 50%; animation: spin 1s linear infinite;
+        }
+
+        /* Effects */
+        .text-magic-gradient {
+            background: linear-gradient(135deg, #fff 0%, var(--color-gold) 50%, #a855f7 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; text-fill-color: transparent;
+        }
+
+        .ambient-orb {
+            position: absolute; border-radius: 50%; filter: blur(80px); opacity: 0.15; pointer-events: none; animation: floatOrb 20s infinite ease-in-out alternate;
+        }
+        .orb-1 { top: 10%; left: 20%; width: 300px; height: 300px; background: var(--color-gold); animation-duration: 25s; }
+        .orb-2 { bottom: 20%; right: 10%; width: 400px; height: 400px; background: #581c87; animation-duration: 30s; }
+        .orb-3 { top: 50%; left: 50%; width: 250px; height: 250px; background: #be123c; animation-duration: 22s; }
+        @keyframes floatOrb { 0% { transform: translate(0, 0) rotate(0deg); } 100% { transform: translate(50px, 50px) rotate(20deg); } }
+
+        .service-card { transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1); border: 1px solid transparent; }
+        .service-card:hover { border-color: rgba(212, 175, 55, 0.3); box-shadow: 0 10px 30px -10px rgba(0,0,0,0.5); transform: translateY(-5px); }
+
+        .reader-glow {
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 105%; height: 105%; background: radial-gradient(circle, rgba(168, 85, 247, 0.2) 0%, rgba(212, 175, 55, 0.1) 50%, transparent 70%); filter: blur(40px); opacity: 0.6; animation: pulseGlow 8s ease-in-out infinite alternate; z-index: -1;
+        }
+        @keyframes pulseGlow { 0% { opacity: 0.4; transform: translate(-50%, -50%) scale(0.95); } 100% { opacity: 0.7; transform: translate(-50%, -50%) scale(1.05); } }
+
+        .scan-border-glow {
+            border-color: rgba(212, 175, 55, 0.4); box-shadow: 0 0 15px rgba(212, 175, 55, 0.1) inset, 0 0 15px rgba(212, 175, 55, 0.1); animation: borderPulse 4s ease-in-out infinite alternate;
+        }
+        @keyframes borderPulse {
+            0% { border-color: rgba(212, 175, 55, 0.3); box-shadow: 0 0 10px rgba(212, 175, 55, 0.1) inset, 0 0 10px rgba(212, 175, 55, 0.1); }
+            100% { border-color: rgba(212, 175, 55, 0.6); box-shadow: 0 0 25px rgba(212, 175, 55, 0.2) inset, 0 0 25px rgba(212, 175, 55, 0.2); }
+        }
+
+        /* --- Chat Interface Styles --- */
+        .chat-scroll::-webkit-scrollbar { width: 4px; }
+        .chat-scroll::-webkit-scrollbar-thumb { background: #333; border-radius: 2px; }
+        .chat-bubble-ai {
+            background: rgba(255, 255, 255, 0.05);
+            border-left: 2px solid var(--color-gold);
+            border-radius: 0 12px 12px 12px;
+            padding: 12px 16px;
+            font-size: 0.9rem;
+            line-height: 1.5;
+            color: #d1d5db;
+            margin-bottom: 12px;
+            animation: fadeIn 0.3s ease-out;
+            max-width: 90%;
+        }
+        .chat-bubble-user {
+            background: linear-gradient(135deg, #a855f7, #7e22ce);
+            border-radius: 12px 0 12px 12px;
+            padding: 10px 16px;
+            font-size: 0.9rem;
+            color: white;
+            margin-bottom: 12px;
+            align-self: flex-end;
+            margin-left: auto;
+            max-width: 80%;
+            animation: fadeIn 0.3s ease-out;
+            box-shadow: 0 4px 15px rgba(126, 34, 206, 0.3);
+        }
+        .typing-dot {
+            width: 6px; height: 6px; background: var(--color-gold); border-radius: 50%; display: inline-block; margin: 0 2px; animation: bounce 1.4s infinite ease-in-out both;
+        }
+        .typing-dot:nth-child(1) { animation-delay: -0.32s; }
+        .typing-dot:nth-child(2) { animation-delay: -0.16s; }
+        @keyframes bounce { 0%, 80%, 100% { transform: scale(0); } 40% { transform: scale(1); } }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+    </style>
+</head>
+<body class="relative bg-[#0a0a0c]">
+
+    <div class="grain-overlay"></div>
+
+    <!-- Navigation -->
+    <nav class="fixed w-full z-[100] top-0 transition-all duration-300 px-6 py-4" id="navbar">
+        <!-- Removed max-w-7xl and mx-auto to allow full width spread like the reference image -->
+        <div class="w-full flex justify-between items-center relative">
+            <!-- Logo (Refined Size & Alignment) -->
+            <div class="z-50 flex items-center">
+                <!-- Added Link to Logo -->
+                <a href="#" onclick="window.scrollTo({top: 0, behavior: 'smooth'}); return false;" class="flex items-center gap-3 hover:opacity-80 transition-opacity">
+                    <!-- Adjusted SVG size and ViewBox for perfect alignment with text -->
+                    <svg width="200" height="32" viewBox="0 0 200 32" fill="none" xmlns="http://www.w3.org/2000/svg" class="h-8 w-auto">
+                        <!-- The Mystic Eye Icon - Centered at cy=16 (half of 32) -->
+                        <g>
+                            <!-- Eye Shape -->
+                            <path d="M16 6.5C8 6.5 1.5 14.5 1.5 16C1.5 17.5 8 25.5 16 25.5C24 25.5 30.5 17.5 30.5 16C30.5 14.5 24 6.5 16 6.5Z" stroke="#D4AF37" stroke-width="1.5" fill="none"/>
+                            <!-- Iris/Pupil -->
+                            <circle cx="16" cy="16" r="5" stroke="#D4AF37" stroke-width="1.5"/>
+                            <circle cx="16" cy="16" r="2" fill="#D4AF37"/>
+                            <!-- Eyelashes / Rays (Top) -->
+                            <path d="M16 1.5V4.5M8 3L9.5 5.5M24 3L22.5 5.5M3 8L5.5 9.5M29 8L26.5 9.5" stroke="#D4AF37" stroke-width="1.5" stroke-linecap="round"/>
+                            <!-- Bottom Rays -->
+                            <path d="M16 30.5V27.5" stroke="#D4AF37" stroke-width="1.5" stroke-linecap="round"/>
+                        </g>
+                        
+                        <!-- Text: ASTROLENS -->
+                        <text x="42" y="22" font-family="'Cormorant Garamond', serif" font-size="18" fill="#D4AF37" letter-spacing="0.15em" style="text-transform: uppercase; font-weight: 600;">ASTROLENS</text>
+                    </svg>
+                </a>
+            </div>
+            
+            <!-- Centered Links (Positioned Absolutely for perfect center) -->
+            <div class="hidden md:flex space-x-12 text-sm tracking-widest font-light text-gray-300 absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 items-center justify-center whitespace-nowrap h-full">
+                <a href="#readings" class="hover:text-amber-500 transition-colors flex items-center h-full">READINGS</a>
+                <a href="#about" class="hover:text-amber-500 transition-colors flex items-center h-full">THE CRAFT</a>
+                <a href="#journal" class="hover:text-amber-500 transition-colors flex items-center h-full">JOURNAL</a>
+            </div>
+
+            <!-- Mobile Menu Button (Right Aligned) -->
+            <button class="md:hidden text-white text-2xl z-50" onclick="toggleMobileMenu()">
+                <i class="fa-solid fa-bars"></i>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Mobile Menu Overlay -->
+    <div id="mobile-menu" class="fixed inset-0 bg-black z-[90] flex flex-col items-center justify-center space-y-8 opacity-0 pointer-events-none transition-opacity duration-300">
+        <a href="#readings" onclick="toggleMobileMenu()" class="text-2xl font-heading italic text-white">Readings</a>
+        <!-- Removed Other Services from Mobile Menu as well -->
+        <a href="#about" onclick="toggleMobileMenu()" class="text-2xl font-heading italic text-white">The Craft</a>
+        <a href="#journal" onclick="toggleMobileMenu()" class="text-2xl font-heading italic text-white">Journal</a>
+        <button onclick="toggleMobileMenu(); scrollToReader()" class="text-amber-500 text-xl font-heading mt-8">Start Session</button>
+        <button onclick="toggleMobileMenu()" class="absolute top-6 right-6 text-white text-2xl">
+            <i class="fa-solid fa-xmark"></i>
+        </button>
+    </div>
+
+    <!-- Hero Section -->
+    <header class="relative h-screen w-full flex items-center justify-center overflow-hidden">
+        <div class="absolute inset-0 bg-gradient-to-b from-transparent via-[#0a0a0c]/50 to-[#0a0a0c] z-10"></div>
+        <div class="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1534447677768-be436bb09401?q=80&w=2940&auto=format&fit=crop')] bg-cover bg-center opacity-40 scale-105 animate-pulse-slow"></div>
+        
+        <div class="relative z-20 text-center px-4 max-w-4xl mx-auto">
+            <div class="fade-in-up">
+                <p class="text-amber-500 text-xs tracking-[0.3em] uppercase mb-6">The Future is in Your Hands</p>
+                <h1 class="text-6xl md:text-8xl lg:text-9xl font-heading leading-tight text-white mb-8">
+                    Reveal Your <br><span class="italic text-magic-gradient">Destiny</span>
+                </h1>
+                <p class="text-gray-400 max-w-lg mx-auto text-sm md:text-base leading-relaxed mb-10 font-light">
+                    Ancient wisdom meets modern technology. Upload a photo of your palm and let the stars interpret your lifeline using our proprietary digital astrology engine.
+                </p>
+                <!-- Changed Hero Button Text to match headline -->
+                <button onclick="scrollToReader()" class="btn-luxury border border-white text-white px-10 py-4 text-sm tracking-widest uppercase">
+                    Reveal My Destiny
+                </button>
+            </div>
+        </div>
+        <div class="absolute bottom-0 left-0 w-full h-32 bg-gradient-to-t from-[#0a0a0c] to-transparent z-10"></div>
+    </header>
+
+    <!-- Philosophy Section -->
+    <section id="about" class="py-32 px-6 bg-[#0a0a0c] relative overflow-hidden">
+        <div class="ambient-orb orb-1"></div>
+        <div class="ambient-orb orb-2" style="animation-delay: -5s;"></div>
+
+        <div class="max-w-7xl mx-auto relative z-10">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
+                <div class="order-2 md:order-1">
+                    <div class="w-full h-[600px] bg-gray-900 relative overflow-hidden rounded-lg">
+                        <img src="https://images.unsplash.com/photo-1630476114003-d8d09323f9dc?q=80&w=2940&auto=format&fit=crop" 
+                             onerror="this.src='https://images.unsplash.com/photo-1519681393784-d120267933ba?q=80&w=2940&auto=format&fit=crop'"
+                             alt="Mystical Hands" 
+                             class="w-full h-full object-cover opacity-70 hover:scale-105 transition-transform duration-700">
+                    </div>
+                </div>
+                <div class="order-1 md:order-2 space-y-8">
+                    <h2 class="text-5xl md:text-6xl font-heading text-white leading-none">
+                        The geometry <br> of the <span class="italic text-amber-500">soul</span>.
+                    </h2>
+                    <p class="text-gray-400 font-light leading-relaxed">
+                        We believe that your palm is a map of your potential. It doesn't dictate your future, but reveals the terrain you must navigate. Our design-forward approach strips away the clutter, focusing purely on the lines that matter.
+                    </p>
+                    <div class="grid grid-cols-2 gap-8 pt-8 border-t border-gray-800/50">
+                        <div>
+                            <h4 class="text-white font-heading text-2xl mb-2">Vedic</h4>
+                            <p class="text-xs text-gray-500 uppercase tracking-wider">Foundation</p>
+                        </div>
+                        <div>
+                            <h4 class="text-white font-heading text-2xl mb-2">Western</h4>
+                            <p class="text-xs text-gray-500 uppercase tracking-wider">Interpretation</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Interactive Reader Application -->
+    <section id="reader-app" class="py-32 bg-[#141418] relative min-h-screen flex items-center overflow-hidden">
+        <div class="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
+            <div class="ambient-orb orb-3" style="top: 10%; right: 10%; background: #581c87; opacity: 0.1;"></div>
+            <div class="ambient-orb orb-1" style="bottom: 10%; left: 10%; opacity: 0.08; animation-delay: -10s;"></div>
+        </div>
+
+        <div class="max-w-5xl mx-auto w-full px-6 relative z-10">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl md:text-5xl font-heading text-white mb-4">Digital Palmistry</h2>
+                <!-- Updated text to specify "palm image" -->
+                <p class="text-gray-500 text-lg font-light">Upload your palm image to reveal your cosmic blueprint.</p>
+            </div>
+
+            <!-- App Interface Container -->
+            <div class="glass-card rounded-2xl overflow-visible shadow-2xl border border-white/10 min-h-[600px] flex flex-col md:flex-row relative z-20">
+                <div class="reader-glow"></div>
+                
+                <!-- Left: Scanner/Input -->
+                <div class="w-full md:w-1/2 bg-black/60 p-8 flex flex-col items-center justify-center border-b md:border-b-0 md:border-r border-white/10 relative group rounded-l-2xl">
+                    <div id="scan-area" class="relative w-64 h-96 border-2 border-dashed scan-border-glow rounded-xl flex items-center justify-center cursor-pointer transition-all duration-500 overflow-hidden bg-black/40 group-hover:bg-black/60">
+                        <div id="upload-state" class="text-center p-6 transition-opacity duration-300 z-10 w-full flex flex-col items-center">
+                            <div class="mb-6 relative w-48 h-48">
+                                <!-- Replaced broken local source with a stable public URL matching your "Energy Hand" style -->
+                                <div class="absolute inset-0 rounded-full bg-purple-500/20 blur-2xl animate-pulse-slow"></div>
+                                <img src="https://images.unsplash.com/photo-1620052087057-bfd8231f5849?q=80&w=2800&auto=format&fit=crop" 
+                                     onerror="this.src='https://images.unsplash.com/photo-1580196969807-cc6de06c05be?q=80&w=2800&auto=format&fit=crop'"
+                                     alt="Mystical Energy Hand" 
+                                     class="relative w-full h-full object-contain drop-shadow-[0_0_25px_rgba(168,85,247,0.6)] opacity-90"
+                                     style="mix-blend-mode: lighten;">
+                            </div>
+                            <p class="text-sm text-white uppercase tracking-[0.2em] font-bold mb-4">Upload Palm Photo</p>
+                            
+                            <div class="flex justify-center gap-6 text-xs text-gray-400 font-light border-t border-gray-700/50 pt-4 w-full max-w-[220px] mx-auto">
+                                <div class="flex flex-col items-center gap-1 group/female">
+                                    <span class="text-amber-500 font-bold group-hover/female:text-white transition-colors"><i class="fa-solid fa-venus"></i> Left Hand</span>
+                                    <span class="opacity-60">Females</span>
+                                </div>
+                                <div class="w-px bg-gray-700/50"></div>
+                                <div class="flex flex-col items-center gap-1 group/male">
+                                    <span class="text-purple-500 font-bold group-hover/male:text-white transition-colors"><i class="fa-solid fa-mars"></i> Right Hand</span>
+                                    <span class="opacity-60">Males</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <img id="hand-image" 
+                             src="https://images.unsplash.com/photo-1484950763426-56b5bf172dbb?q=80&w=2940&auto=format&fit=crop" 
+                             onerror="this.style.display='none'"
+                             alt="Palm Reading Hand"
+                             class="absolute inset-0 w-full h-full object-cover opacity-0 transition-opacity duration-500 grayscale contrast-125 mix-blend-lighten">
+
+                        <div id="scanner-line" class="scanner-line z-20"></div>
+                        <div class="absolute inset-0 opacity-20 pointer-events-none bg-[linear-gradient(rgba(212,175,55,0.1)_1px,transparent_1px),linear-gradient(90deg,rgba(212,175,55,0.1)_1px,transparent_1px)] bg-[size:30px_30px]"></div>
+                    </div>
+
+                    <div class="mt-10 flex gap-4 z-30 w-full justify-center">
+                        <button onclick="startSimulation()" id="btn-scan" class="btn-magic px-8 py-4 text-xs uppercase tracking-[0.15em] font-bold rounded-sm">
+                            Analyze Palm
+                        </button>
+                        <button onclick="resetSimulation()" class="px-6 py-4 border border-gray-700 text-gray-400 text-xs uppercase tracking-[0.15em] font-semibold hover:border-white hover:text-white transition-all rounded-sm">
+                            Reset
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Right: Results/Data (Interactive Chat) -->
+                <div class="w-full md:w-1/2 p-8 bg-[#0f0f11]/90 relative backdrop-blur-md rounded-r-2xl overflow-hidden flex flex-col">
+                    <div class="absolute inset-0 opacity-5 pointer-events-none bg-[url('https://www.transparenttextures.com/patterns/astronomy.png')]"></div>
+                    
+                    <!-- Idle State -->
+                    <div id="result-idle" class="absolute inset-0 flex flex-col items-center justify-center text-center z-10 transition-opacity duration-500">
+                        <div class="mystical-spinner mb-8 opacity-60"></div>
+                        <h3 class="text-2xl font-heading text-white mb-2">Awaiting Connection</h3>
+                        <p class="text-gray-500 font-light italic text-sm max-w-xs">Upload your palm to bridge the physical and digital realms.</p>
+                    </div>
+
+                    <!-- Loading State -->
+                    <div id="result-loading" class="absolute inset-0 flex flex-col items-center justify-center text-center bg-[#0f0f11]/95 opacity-0 pointer-events-none transition-opacity duration-300 z-20">
+                        <div class="spinner mb-6"></div>
+                        <p class="text-amber-500 text-xs tracking-widest uppercase animate-pulse">Tracing Life Line...</p>
+                    </div>
+
+                    <!-- Chat Interface (Active State) -->
+                    <div id="chat-interface" class="relative z-30 h-full flex flex-col hidden opacity-0 transition-opacity duration-500">
+                        <!-- Chat Header -->
+                        <div class="flex items-center justify-between border-b border-gray-800 pb-4 mb-4">
+                            <div class="flex items-center gap-3">
+                                <div class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></div>
+                                <span class="text-amber-500 font-heading text-lg italic">Astrolens Oracle</span>
+                            </div>
+                            <span class="text-xs text-gray-600 uppercase tracking-widest">Session #9281</span>
+                        </div>
+
+                        <!-- Messages Area -->
+                        <div id="chat-messages" class="flex-1 overflow-y-auto chat-scroll pr-2 mb-4 space-y-4">
+                            <!-- Dynamic messages will appear here -->
+                        </div>
+
+                        <!-- Input Area -->
+                        <div class="relative mt-auto">
+                            <input type="text" id="user-input" placeholder="Ask about your destiny..." 
+                                   class="w-full bg-black/40 border border-gray-700 rounded-lg py-4 pl-4 pr-12 text-sm text-white focus:outline-none focus:border-amber-500/50 transition-colors placeholder-gray-600 font-light">
+                            <button onclick="sendMessage()" class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-amber-500 transition-colors">
+                                <i class="fa-solid fa-paper-plane"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Services Section -->
+    <section id="readings" class="py-32 px-6 bg-[#0a0a0c] relative overflow-hidden">
+         <div class="ambient-orb orb-2" style="top: 5%; right: 5%; opacity: 0.1;"></div>
+         <div class="ambient-orb orb-3" style="bottom: 10%; left: 20%; opacity: 0.1; animation-delay: -15s;"></div>
+
+        <div class="max-w-7xl mx-auto relative z-10">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl md:text-5xl font-heading text-white">Our Services</h2>
+                <div class="w-20 h-1 bg-amber-500/30 mx-auto mt-6"></div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="group cursor-pointer service-card p-4 rounded-xl bg-[#141418]/50 backdrop-blur-sm">
+                    <div class="h-[350px] overflow-hidden mb-6 relative bg-gray-900 rounded-lg">
+                        <img src="https://images.unsplash.com/photo-1534447677768-be436bb09401?q=80&w=2994&auto=format&fit=crop" 
+                             onerror="this.src='https://images.unsplash.com/photo-1419242902214-272b3f66ee7a?q=80&w=2940&auto=format&fit=crop'"
+                             class="w-full h-full object-cover opacity-60 group-hover:opacity-90 group-hover:scale-105 transition-all duration-1000">
+                        <div class="absolute bottom-6 left-6 text-white opacity-0 group-hover:opacity-100 transition-opacity duration-500 translate-y-4 group-hover:translate-y-0">
+                            <i class="fa-solid fa-arrow-right text-amber-500 text-xl"></i>
+                        </div>
+                    </div>
+                    <h3 class="text-2xl font-heading text-white mb-3 group-hover:text-amber-500 transition-colors">Natal Charts</h3>
+                    <p class="text-gray-400 text-sm leading-relaxed font-light">Understand the alignment of the planets at the exact moment of your birth. A blueprint of your soul.</p>
+                </div>
+
+                <div class="group cursor-pointer mt-8 md:mt-0 service-card p-4 rounded-xl bg-[#141418]/50 backdrop-blur-sm">
+                    <div class="h-[350px] overflow-hidden mb-6 relative bg-gray-900 rounded-lg">
+                        <!-- Daily Horoscope (Kept exactly as you liked) -->
+                        <img src="https://images.unsplash.com/photo-1419242902214-272b3f66ee7a?q=80&w=2940&auto=format&fit=crop" 
+                             onerror="this.src='https://images.unsplash.com/photo-1506318137071-a8bcbf6755dd?q=80&w=2940&auto=format&fit=crop'"
+                             alt="Daily Horoscope - Starry Sky"
+                             class="w-full h-full object-cover opacity-60 group-hover:opacity-90 group-hover:scale-105 transition-all duration-1000">
+                        <div class="absolute bottom-6 left-6 text-white opacity-0 group-hover:opacity-100 transition-opacity duration-500 translate-y-4 group-hover:translate-y-0">
+                            <i class="fa-solid fa-arrow-right text-amber-500 text-xl"></i>
+                        </div>
+                    </div>
+                    <h3 class="text-2xl font-heading text-white mb-3 group-hover:text-amber-500 transition-colors">Daily Horoscope</h3>
+                    <p class="text-gray-400 text-sm leading-relaxed font-light">Celestial guidance tailored to your sign, updated every morning to help you navigate the day's energies.</p>
+                </div>
+
+                <div class="group cursor-pointer mt-8 md:mt-0 service-card p-4 rounded-xl bg-[#141418]/50 backdrop-blur-sm">
+                    <div class="h-[350px] overflow-hidden mb-6 relative bg-gray-900 rounded-lg">
+                        <!-- Updated Compatibility: "Galaxy in Hands" - More mystical and better fit for palmistry theme -->
+                        <img src="https://images.unsplash.com/photo-1520052205864-92d242b3a76b?q=80&w=2940&auto=format&fit=crop" 
+                             onerror="this.src='https://images.unsplash.com/photo-1534447677768-be436bb09401?q=80&w=2940&auto=format&fit=crop'"
+                             alt="Compatibility - Cosmic Connection"
+                             class="w-full h-full object-cover opacity-60 group-hover:opacity-90 group-hover:scale-105 transition-all duration-1000">
+                        <div class="absolute bottom-6 left-6 text-white opacity-0 group-hover:opacity-100 transition-opacity duration-500 translate-y-4 group-hover:translate-y-0">
+                            <i class="fa-solid fa-arrow-right text-amber-500 text-xl"></i>
+                        </div>
+                    </div>
+                    <h3 class="text-2xl font-heading text-white mb-3 group-hover:text-amber-500 transition-colors">Compatibility</h3>
+                    <p class="text-gray-400 text-sm leading-relaxed font-light">Synastry charts to determine the harmonic resonance between two souls. Discover your cosmic connection.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Journal Section (NEW) -->
+    <section id="journal" class="py-32 px-6 bg-[#0a0a0c] border-t border-gray-900/50 relative">
+        <div class="max-w-7xl mx-auto">
+            <div class="flex flex-col md:flex-row justify-between items-end mb-16 gap-6">
+                <div>
+                    <h2 class="text-4xl md:text-5xl font-heading text-white mb-4">The Journal</h2>
+                    <p class="text-gray-500 font-light max-w-md">Insights, guides, and celestial updates to deepen your understanding of the craft.</p>
+                </div>
+                <a href="#" class="text-amber-500 text-xs tracking-widest uppercase hover:text-white transition-colors border-b border-amber-500/30 pb-1">View All Articles</a>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-12">
+                <!-- Article 1 -->
+                <article class="group cursor-pointer flex flex-col h-full">
+                    <div class="h-64 overflow-hidden rounded-lg mb-6 relative">
+                        <img src="https://images.unsplash.com/photo-1614726365723-49cfae967a5b?q=80&w=2787&auto=format&fit=crop" 
+                             alt="Mercury Retrograde" 
+                             class="w-full h-full object-cover opacity-80 group-hover:opacity-100 group-hover:scale-105 transition-all duration-700">
+                    </div>
+                    <div class="flex items-center gap-3 text-[10px] tracking-widest uppercase text-gray-500 mb-3">
+                        <span class="text-amber-500">Astrology</span>
+                        <span class="w-1 h-1 rounded-full bg-gray-700"></span>
+                        <span>Oct 12, 2024</span>
+                    </div>
+                    <h3 class="text-2xl font-heading text-white mb-3 leading-tight group-hover:text-amber-500 transition-colors">Navigating Mercury Retrograde: A Survival Guide</h3>
+                    <p class="text-gray-400 text-sm leading-relaxed font-light mb-4 flex-grow">
+                        Communication breakdowns and technological glitches need not spell disaster. Here is how to harness the energy of retrograde for reflection.
+                    </p>
+                    <span class="text-white text-xs tracking-widest uppercase group-hover:text-amber-500 transition-colors mt-auto">Read Article</span>
+                </article>
+
+                <!-- Article 2 -->
+                <article class="group cursor-pointer flex flex-col h-full">
+                    <div class="h-64 overflow-hidden rounded-lg mb-6 relative">
+                        <img src="https://images.unsplash.com/photo-1516962215378-7fa2e137ae93?q=80&w=2785&auto=format&fit=crop" 
+                             alt="Palmistry 101" 
+                             class="w-full h-full object-cover opacity-80 group-hover:opacity-100 group-hover:scale-105 transition-all duration-700">
+                    </div>
+                    <div class="flex items-center gap-3 text-[10px] tracking-widest uppercase text-gray-500 mb-3">
+                        <span class="text-amber-500">Palmistry</span>
+                        <span class="w-1 h-1 rounded-full bg-gray-700"></span>
+                        <span>Sep 28, 2024</span>
+                    </div>
+                    <h3 class="text-2xl font-heading text-white mb-3 leading-tight group-hover:text-amber-500 transition-colors">The Major Lines: Heart, Head, and Life Explained</h3>
+                    <p class="text-gray-400 text-sm leading-relaxed font-light mb-4 flex-grow">
+                        Before you dive into the minor mounts, understanding the three rivers of the palm is essential for any aspiring chiromancer.
+                    </p>
+                    <span class="text-white text-xs tracking-widest uppercase group-hover:text-amber-500 transition-colors mt-auto">Read Article</span>
+                </article>
+
+                <!-- Article 3 -->
+                <article class="group cursor-pointer flex flex-col h-full">
+                    <div class="h-64 overflow-hidden rounded-lg mb-6 relative">
+                        <img src="https://images.unsplash.com/photo-1532968961962-8a0cb3a2d4f5?q=80&w=2940&auto=format&fit=crop" 
+                             alt="Moon Phases" 
+                             class="w-full h-full object-cover opacity-80 group-hover:opacity-100 group-hover:scale-105 transition-all duration-700">
+                    </div>
+                    <div class="flex items-center gap-3 text-[10px] tracking-widest uppercase text-gray-500 mb-3">
+                        <span class="text-amber-500">Moon Cycles</span>
+                        <span class="w-1 h-1 rounded-full bg-gray-700"></span>
+                        <span>Sep 15, 2024</span>
+                    </div>
+                    <h3 class="text-2xl font-heading text-white mb-3 leading-tight group-hover:text-amber-500 transition-colors">Harnessing the Power of the New Moon</h3>
+                    <p class="text-gray-400 text-sm leading-relaxed font-light mb-4 flex-grow">
+                        Setting intentions during the darkest phase of the lunar cycle can amplify your manifestation potential tenfold.
+                    </p>
+                    <span class="text-white text-xs tracking-widest uppercase group-hover:text-amber-500 transition-colors mt-auto">Read Article</span>
+                </article>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-[#050506] text-white py-20 border-t border-gray-900/50 relative overflow-hidden">
+        <div class="ambient-orb orb-1" style="bottom: -20%; left: 50%; opacity: 0.05; width: 500px; height: 500px;"></div>
+
+        <div class="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-4 gap-12 relative z-10">
+            <div class="col-span-1 md:col-span-2">
+                <h2 class="text-3xl font-heading italic mb-6 text-magic-gradient">Astrolens</h2>
+                <p class="text-gray-500 max-w-xs font-light text-sm leading-relaxed">
+                    Modern astrology for the digital age. We merge ancient archetypes with beautiful design to provide clarity in a chaotic world.
+                </p>
+            </div>
+            
+            <div class="space-y-4">
+                <h4 class="text-xs font-bold tracking-widest text-gray-600 uppercase">Explore</h4>
+                <ul class="space-y-3 text-sm text-gray-400 font-light">
+                    <li><a href="#" class="hover:text-amber-500 transition-colors">Our Story</a></li>
+                    <li><a href="#" class="hover:text-amber-500 transition-colors">Services</a></li>
+                    <li><a href="#" class="hover:text-amber-500 transition-colors">Pricing</a></li>
+                    <li><a href="#" class="hover:text-amber-500 transition-colors">FAQ</a></li>
+                </ul>
+            </div>
+
+            <div class="space-y-4">
+                <h4 class="text-xs font-bold tracking-widest text-gray-600 uppercase">Connect</h4>
+                <ul class="space-y-3 text-sm text-gray-400 font-light">
+                    <li><a href="#" class="hover:text-amber-500 transition-colors">Instagram</a></li>
+                    <li><a href="#" class="hover:text-amber-500 transition-colors">Twitter</a></li>
+                    <li><a href="#" class="hover:text-amber-500 transition-colors">Newsletter</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="max-w-7xl mx-auto px-6 mt-20 pt-8 border-t border-gray-900/50 flex flex-col md:flex-row justify-between text-xs text-gray-600 relative z-10">
+            <p>&copy; 2024 Astrolens.org. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Smooth Scroll
+        function scrollToReader() {
+            document.getElementById('reader-app').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // Added Scroll to Services function
+        function scrollToServices() {
+            document.getElementById('readings').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // Mobile Menu
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobile-menu');
+            const body = document.body;
+            
+            if (menu.classList.contains('opacity-0')) {
+                menu.classList.remove('opacity-0', 'pointer-events-none');
+                body.classList.add('overflow-hidden');
+            } else {
+                menu.classList.add('opacity-0', 'pointer-events-none');
+                body.classList.remove('overflow-hidden');
+            }
+        }
+
+        // Simulation Logic
+        const chatMessages = document.getElementById('chat-messages');
+        const userInput = document.getElementById('user-input');
+
+        function startSimulation() {
+            const uploadState = document.getElementById('upload-state');
+            const handImage = document.getElementById('hand-image');
+            const scannerLine = document.getElementById('scanner-line');
+            const resultIdle = document.getElementById('result-idle');
+            const resultLoading = document.getElementById('result-loading');
+            const chatInterface = document.getElementById('chat-interface');
+            const btnScan = document.getElementById('btn-scan');
+
+            // 1. UI Reset
+            chatInterface.classList.add('hidden');
+            btnScan.disabled = true;
+            btnScan.innerText = 'Scanning...';
+            btnScan.classList.add('opacity-50', 'cursor-not-allowed');
+
+            // 2. Show Image
+            uploadState.style.opacity = '0';
+            setTimeout(() => {
+                handImage.style.opacity = '0.8';
+            }, 200);
+
+            // 3. Start Scanner
+            setTimeout(() => {
+                scannerLine.style.display = 'block';
+            }, 800);
+
+            // 4. Show Loading on Right Panel
+            resultIdle.style.opacity = '0';
+            setTimeout(() => {
+                resultIdle.style.display = 'none';
+                resultLoading.style.opacity = '1';
+                resultLoading.style.pointerEvents = 'auto';
+            }, 500);
+
+            // 5. Process and Show Results (Start Chat)
+            setTimeout(() => {
+                scannerLine.style.display = 'none';
+                resultLoading.style.opacity = '0';
+                resultLoading.style.pointerEvents = 'none';
+                
+                setTimeout(() => {
+                    chatInterface.classList.remove('hidden');
+                    setTimeout(() => chatInterface.classList.remove('opacity-0'), 50);
+                    btnScan.disabled = false;
+                    btnScan.innerText = 'Analyze Again';
+                    btnScan.classList.remove('opacity-50', 'cursor-not-allowed');
+                    
+                    // Initial AI Message
+                    addAiMessage("The lines of your palm tell a fascinating story. Your Life Line is deep and unbroken, suggesting great vitality. <br><br>However, your Heart Line forks beneath Jupiter. What specific guidance do you seek today?");
+                }, 300);
+            }, 4000);
+        }
+
+        function resetSimulation() {
+            const uploadState = document.getElementById('upload-state');
+            const handImage = document.getElementById('hand-image');
+            const scannerLine = document.getElementById('scanner-line');
+            const resultIdle = document.getElementById('result-idle');
+            const resultLoading = document.getElementById('result-loading');
+            const chatInterface = document.getElementById('chat-interface');
+            
+            // Clear chat
+            chatMessages.innerHTML = '';
+
+            // Reset Image Area
+            scannerLine.style.display = 'none';
+            handImage.style.opacity = '0';
+            setTimeout(() => { uploadState.style.opacity = '1'; }, 500);
+
+            // Reset Right Panel
+            chatInterface.classList.add('opacity-0');
+            setTimeout(() => {
+                chatInterface.classList.add('hidden');
+                resultLoading.style.opacity = '0';
+                resultIdle.style.display = 'flex';
+                setTimeout(() => { resultIdle.style.opacity = '1'; }, 100);
+            }, 300);
+        }
+
+        // Chat Functions
+        function addAiMessage(text) {
+            const bubble = document.createElement('div');
+            bubble.className = 'chat-bubble-ai';
+            bubble.innerHTML = text;
+            chatMessages.appendChild(bubble);
+            scrollToBottom();
+        }
+
+        function addUserMessage(text) {
+            const bubble = document.createElement('div');
+            bubble.className = 'chat-bubble-user';
+            bubble.innerText = text;
+            chatMessages.appendChild(bubble);
+            scrollToBottom();
+        }
+
+        function showTyping() {
+            const typingDiv = document.createElement('div');
+            typingDiv.className = 'chat-bubble-ai typing-indicator';
+            typingDiv.id = 'typing-indicator';
+            typingDiv.innerHTML = '<span class="typing-dot"></span><span class="typing-dot"></span><span class="typing-dot"></span>';
+            chatMessages.appendChild(typingDiv);
+            scrollToBottom();
+        }
+
+        function removeTyping() {
+            const typing = document.getElementById('typing-indicator');
+            if (typing) typing.remove();
+        }
+
+        function scrollToBottom() {
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        function sendMessage() {
+            const text = userInput.value.trim();
+            if (!text) return;
+
+            addUserMessage(text);
+            userInput.value = '';
+
+            // Simulate AI delay and response
+            showTyping();
+            setTimeout(() => {
+                removeTyping();
+                const response = generateMockResponse(text);
+                addAiMessage(response);
+            }, 1500);
+        }
+
+        function generateMockResponse(input) {
+            const lowerInput = input.toLowerCase();
+            if (lowerInput.includes('love') || lowerInput.includes('relationship')) {
+                return "Your heart line shows a capacity for deep connection. The slight curvature suggests you are guarded, but a significant union aligns with the influence of Venus in your chart. Could you share your birth month for more clarity?";
+            } else if (lowerInput.includes('career') || lowerInput.includes('job') || lowerInput.includes('money')) {
+                return "Your Head Line is remarkably straight, indicating a logical approach to finance. I see a potential fork indicating a dual career path or side venture. Are you currently considering a change in direction?";
+            } else if (lowerInput.includes('health') || lowerInput.includes('life')) {
+                return "The depth of your Life Line is promising. It wraps well around the Mount of Venus, indicating strong vitality. However, subtle stress lines suggest a need for grounding rituals.";
+            } else if (lowerInput.match(/\d/)) { // Checks for numbers (like dates)
+                return "Thank you. With this planetary alignment, the reading becomes clearer. The coming cycle favors introspection and preparation for a major shift in the next 3 months.";
+            } else {
+                return "The stars are listening. Your palm suggests a period of transition. To refine this further, focus on your dominant hand's fate line. What is your primary concern at this moment?";
+            }
+        }
+
+        // Allow 'Enter' key to send
+        userInput.addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') {
+                sendMessage();
+            }
+        });
+
+        // Navbar Scroll Effect
+        window.addEventListener('scroll', () => {
+            const navbar = document.getElementById('navbar');
+            if (window.scrollY > 50) {
+                navbar.classList.add('bg-[#0a0a0c]/90', 'backdrop-blur-lg', 'border-b', 'border-white/5');
+            } else {
+                navbar.classList.remove('bg-[#0a0a0c]/90', 'backdrop-blur-lg', 'border-b', 'border-white/5');
+            }
+        });
+    </script>
+</body>
+</html>
