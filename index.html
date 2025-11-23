@@ -182,53 +182,38 @@
 
     <div class="grain-overlay"></div>
 
-    <!-- Navigation -->
     <nav class="fixed w-full z-[100] top-0 transition-all duration-300 px-6 py-4" id="navbar">
-        <!-- Removed max-w-7xl and mx-auto to allow full width spread like the reference image -->
         <div class="w-full flex justify-between items-center relative">
-            <!-- Logo (Refined Size & Alignment) -->
             <div class="z-50 flex items-center">
-                <!-- Added Link to Logo -->
                 <a href="#" onclick="window.scrollTo({top: 0, behavior: 'smooth'}); return false;" class="flex items-center gap-3 hover:opacity-80 transition-opacity">
-                    <!-- Adjusted SVG size and ViewBox for perfect alignment with text -->
                     <svg width="200" height="32" viewBox="0 0 200 32" fill="none" xmlns="http://www.w3.org/2000/svg" class="h-8 w-auto">
-                        <!-- The Mystic Eye Icon - Centered at cy=16 (half of 32) -->
                         <g>
-                            <!-- Eye Shape -->
                             <path d="M16 6.5C8 6.5 1.5 14.5 1.5 16C1.5 17.5 8 25.5 16 25.5C24 25.5 30.5 17.5 30.5 16C30.5 14.5 24 6.5 16 6.5Z" stroke="#D4AF37" stroke-width="1.5" fill="none"/>
-                            <!-- Iris/Pupil -->
                             <circle cx="16" cy="16" r="5" stroke="#D4AF37" stroke-width="1.5"/>
                             <circle cx="16" cy="16" r="2" fill="#D4AF37"/>
-                            <!-- Eyelashes / Rays (Top) -->
                             <path d="M16 1.5V4.5M8 3L9.5 5.5M24 3L22.5 5.5M3 8L5.5 9.5M29 8L26.5 9.5" stroke="#D4AF37" stroke-width="1.5" stroke-linecap="round"/>
-                            <!-- Bottom Rays -->
                             <path d="M16 30.5V27.5" stroke="#D4AF37" stroke-width="1.5" stroke-linecap="round"/>
                         </g>
                         
-                        <!-- Text: ASTROLENS -->
                         <text x="42" y="22" font-family="'Cormorant Garamond', serif" font-size="18" fill="#D4AF37" letter-spacing="0.15em" style="text-transform: uppercase; font-weight: 600;">ASTROLENS</text>
                     </svg>
                 </a>
             </div>
             
-            <!-- Centered Links (Positioned Absolutely for perfect center) -->
             <div class="hidden md:flex space-x-12 text-sm tracking-widest font-light text-gray-300 absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 items-center justify-center whitespace-nowrap h-full">
                 <a href="#readings" class="hover:text-amber-500 transition-colors flex items-center h-full">READINGS</a>
                 <a href="#about" class="hover:text-amber-500 transition-colors flex items-center h-full">THE CRAFT</a>
                 <a href="#journal" class="hover:text-amber-500 transition-colors flex items-center h-full">JOURNAL</a>
             </div>
 
-            <!-- Mobile Menu Button (Right Aligned) -->
             <button class="md:hidden text-white text-2xl z-50" onclick="toggleMobileMenu()">
                 <i class="fa-solid fa-bars"></i>
             </button>
         </div>
     </nav>
 
-    <!-- Mobile Menu Overlay -->
     <div id="mobile-menu" class="fixed inset-0 bg-black z-[90] flex flex-col items-center justify-center space-y-8 opacity-0 pointer-events-none transition-opacity duration-300">
         <a href="#readings" onclick="toggleMobileMenu()" class="text-2xl font-heading italic text-white">Readings</a>
-        <!-- Removed Other Services from Mobile Menu as well -->
         <a href="#about" onclick="toggleMobileMenu()" class="text-2xl font-heading italic text-white">The Craft</a>
         <a href="#journal" onclick="toggleMobileMenu()" class="text-2xl font-heading italic text-white">Journal</a>
         <button onclick="toggleMobileMenu(); scrollToReader()" class="text-amber-500 text-xl font-heading mt-8">Start Session</button>
@@ -237,7 +222,6 @@
         </button>
     </div>
 
-    <!-- Hero Section -->
     <header class="relative h-screen w-full flex items-center justify-center overflow-hidden">
         <div class="absolute inset-0 bg-gradient-to-b from-transparent via-[#0a0a0c]/50 to-[#0a0a0c] z-10"></div>
         <div class="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1534447677768-be436bb09401?q=80&w=2940&auto=format&fit=crop')] bg-cover bg-center opacity-40 scale-105 animate-pulse-slow"></div>
@@ -251,7 +235,6 @@
                 <p class="text-gray-400 max-w-lg mx-auto text-sm md:text-base leading-relaxed mb-10 font-light">
                     Ancient wisdom meets modern technology. Upload a photo of your palm and let the stars interpret your lifeline using our proprietary digital astrology engine.
                 </p>
-                <!-- Changed Hero Button Text to match headline -->
                 <button onclick="scrollToReader()" class="btn-luxury border border-white text-white px-10 py-4 text-sm tracking-widest uppercase">
                     Reveal My Destiny
                 </button>
@@ -260,7 +243,6 @@
         <div class="absolute bottom-0 left-0 w-full h-32 bg-gradient-to-t from-[#0a0a0c] to-transparent z-10"></div>
     </header>
 
-    <!-- Philosophy Section -->
     <section id="about" class="py-32 px-6 bg-[#0a0a0c] relative overflow-hidden">
         <div class="ambient-orb orb-1"></div>
         <div class="ambient-orb orb-2" style="animation-delay: -5s;"></div>
@@ -297,7 +279,6 @@
         </div>
     </section>
 
-    <!-- Interactive Reader Application -->
     <section id="reader-app" class="py-32 bg-[#141418] relative min-h-screen flex items-center overflow-hidden">
         <div class="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
             <div class="ambient-orb orb-3" style="top: 10%; right: 10%; background: #581c87; opacity: 0.1;"></div>
@@ -307,20 +288,19 @@
         <div class="max-w-5xl mx-auto w-full px-6 relative z-10">
             <div class="text-center mb-16">
                 <h2 class="text-4xl md:text-5xl font-heading text-white mb-4">Digital Palmistry</h2>
-                <!-- Updated text to specify "palm image" -->
                 <p class="text-gray-500 text-lg font-light">Upload your palm image to reveal your cosmic blueprint.</p>
             </div>
 
-            <!-- App Interface Container -->
             <div class="glass-card rounded-2xl overflow-visible shadow-2xl border border-white/10 min-h-[600px] flex flex-col md:flex-row relative z-20">
                 <div class="reader-glow"></div>
                 
-                <!-- Left: Scanner/Input -->
                 <div class="w-full md:w-1/2 bg-black/60 p-8 flex flex-col items-center justify-center border-b md:border-b-0 md:border-r border-white/10 relative group rounded-l-2xl">
                     <div id="scan-area" class="relative w-64 h-96 border-2 border-dashed scan-border-glow rounded-xl flex items-center justify-center cursor-pointer transition-all duration-500 overflow-hidden bg-black/40 group-hover:bg-black/60">
+                        
+                        <input type="file" id="file-upload" accept="image/*" style="display: none;">
+                        
                         <div id="upload-state" class="text-center p-6 transition-opacity duration-300 z-10 w-full flex flex-col items-center">
                             <div class="mb-6 relative w-48 h-48">
-                                <!-- Replaced broken local source with a stable public URL matching your "Energy Hand" style -->
                                 <div class="absolute inset-0 rounded-full bg-purple-500/20 blur-2xl animate-pulse-slow"></div>
                                 <img src="https://images.unsplash.com/photo-1620052087057-bfd8231f5849?q=80&w=2800&auto=format&fit=crop" 
                                      onerror="this.src='https://images.unsplash.com/photo-1580196969807-cc6de06c05be?q=80&w=2800&auto=format&fit=crop'"
@@ -363,26 +343,21 @@
                     </div>
                 </div>
 
-                <!-- Right: Results/Data (Interactive Chat) -->
                 <div class="w-full md:w-1/2 p-8 bg-[#0f0f11]/90 relative backdrop-blur-md rounded-r-2xl overflow-hidden flex flex-col">
                     <div class="absolute inset-0 opacity-5 pointer-events-none bg-[url('https://www.transparenttextures.com/patterns/astronomy.png')]"></div>
                     
-                    <!-- Idle State -->
                     <div id="result-idle" class="absolute inset-0 flex flex-col items-center justify-center text-center z-10 transition-opacity duration-500">
                         <div class="mystical-spinner mb-8 opacity-60"></div>
                         <h3 class="text-2xl font-heading text-white mb-2">Awaiting Connection</h3>
                         <p class="text-gray-500 font-light italic text-sm max-w-xs">Upload your palm to bridge the physical and digital realms.</p>
                     </div>
 
-                    <!-- Loading State -->
                     <div id="result-loading" class="absolute inset-0 flex flex-col items-center justify-center text-center bg-[#0f0f11]/95 opacity-0 pointer-events-none transition-opacity duration-300 z-20">
                         <div class="spinner mb-6"></div>
                         <p class="text-amber-500 text-xs tracking-widest uppercase animate-pulse">Tracing Life Line...</p>
                     </div>
 
-                    <!-- Chat Interface (Active State) -->
                     <div id="chat-interface" class="relative z-30 h-full flex flex-col hidden opacity-0 transition-opacity duration-500">
-                        <!-- Chat Header -->
                         <div class="flex items-center justify-between border-b border-gray-800 pb-4 mb-4">
                             <div class="flex items-center gap-3">
                                 <div class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></div>
@@ -391,12 +366,9 @@
                             <span class="text-xs text-gray-600 uppercase tracking-widest">Session #9281</span>
                         </div>
 
-                        <!-- Messages Area -->
                         <div id="chat-messages" class="flex-1 overflow-y-auto chat-scroll pr-2 mb-4 space-y-4">
-                            <!-- Dynamic messages will appear here -->
-                        </div>
+                            </div>
 
-                        <!-- Input Area -->
                         <div class="relative mt-auto">
                             <input type="text" id="user-input" placeholder="Ask about your destiny..." 
                                    class="w-full bg-black/40 border border-gray-700 rounded-lg py-4 pl-4 pr-12 text-sm text-white focus:outline-none focus:border-amber-500/50 transition-colors placeholder-gray-600 font-light">
@@ -411,7 +383,6 @@
         </div>
     </section>
 
-    <!-- Services Section -->
     <section id="readings" class="py-32 px-6 bg-[#0a0a0c] relative overflow-hidden">
          <div class="ambient-orb orb-2" style="top: 5%; right: 5%; opacity: 0.1;"></div>
          <div class="ambient-orb orb-3" style="bottom: 10%; left: 20%; opacity: 0.1; animation-delay: -15s;"></div>
@@ -438,7 +409,6 @@
 
                 <div class="group cursor-pointer mt-8 md:mt-0 service-card p-4 rounded-xl bg-[#141418]/50 backdrop-blur-sm">
                     <div class="h-[350px] overflow-hidden mb-6 relative bg-gray-900 rounded-lg">
-                        <!-- Daily Horoscope (Kept exactly as you liked) -->
                         <img src="https://images.unsplash.com/photo-1419242902214-272b3f66ee7a?q=80&w=2940&auto=format&fit=crop" 
                              onerror="this.src='https://images.unsplash.com/photo-1506318137071-a8bcbf6755dd?q=80&w=2940&auto=format&fit=crop'"
                              alt="Daily Horoscope - Starry Sky"
@@ -453,7 +423,6 @@
 
                 <div class="group cursor-pointer mt-8 md:mt-0 service-card p-4 rounded-xl bg-[#141418]/50 backdrop-blur-sm">
                     <div class="h-[350px] overflow-hidden mb-6 relative bg-gray-900 rounded-lg">
-                        <!-- Updated Compatibility: "Galaxy in Hands" - More mystical and better fit for palmistry theme -->
                         <img src="https://images.unsplash.com/photo-1520052205864-92d242b3a76b?q=80&w=2940&auto=format&fit=crop" 
                              onerror="this.src='https://images.unsplash.com/photo-1534447677768-be436bb09401?q=80&w=2940&auto=format&fit=crop'"
                              alt="Compatibility - Cosmic Connection"
@@ -469,7 +438,6 @@
         </div>
     </section>
 
-    <!-- Journal Section (NEW) -->
     <section id="journal" class="py-32 px-6 bg-[#0a0a0c] border-t border-gray-900/50 relative">
         <div class="max-w-7xl mx-auto">
             <div class="flex flex-col md:flex-row justify-between items-end mb-16 gap-6">
@@ -481,7 +449,6 @@
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-3 gap-12">
-                <!-- Article 1 -->
                 <article class="group cursor-pointer flex flex-col h-full">
                     <div class="h-64 overflow-hidden rounded-lg mb-6 relative">
                         <img src="https://images.unsplash.com/photo-1614726365723-49cfae967a5b?q=80&w=2787&auto=format&fit=crop" 
@@ -500,7 +467,6 @@
                     <span class="text-white text-xs tracking-widest uppercase group-hover:text-amber-500 transition-colors mt-auto">Read Article</span>
                 </article>
 
-                <!-- Article 2 -->
                 <article class="group cursor-pointer flex flex-col h-full">
                     <div class="h-64 overflow-hidden rounded-lg mb-6 relative">
                         <img src="https://images.unsplash.com/photo-1516962215378-7fa2e137ae93?q=80&w=2785&auto=format&fit=crop" 
@@ -519,7 +485,6 @@
                     <span class="text-white text-xs tracking-widest uppercase group-hover:text-amber-500 transition-colors mt-auto">Read Article</span>
                 </article>
 
-                <!-- Article 3 -->
                 <article class="group cursor-pointer flex flex-col h-full">
                     <div class="h-64 overflow-hidden rounded-lg mb-6 relative">
                         <img src="https://images.unsplash.com/photo-1532968961962-8a0cb3a2d4f5?q=80&w=2940&auto=format&fit=crop" 
@@ -541,7 +506,6 @@
         </div>
     </section>
 
-    <!-- Footer -->
     <footer class="bg-[#050506] text-white py-20 border-t border-gray-900/50 relative overflow-hidden">
         <div class="ambient-orb orb-1" style="bottom: -20%; left: 50%; opacity: 0.05; width: 500px; height: 500px;"></div>
 
@@ -578,17 +542,259 @@
     </footer>
 
     <script>
-        // Smooth Scroll
+        // --- 1. THE RULES (In json-rules-engine format) ---
+        // This array defines the conditional logic and the resulting events.
+        const LAL_KITAB_RULES_JSON = [
+            // --- JUPITER (GURU) RULES - Wealth/Wisdom (Activation Age: 16) ---
+            {
+                "conditions": {
+                    "all": [
+                        { "fact": "mount", "operator": "equal", "value": "jupiter" },
+                        { "fact": "sign", "operator": "equal", "value": "cross" }
+                    ]
+                },
+                "event": {
+                    "type": "reading_match",
+                    "params": {
+                        "planet": "Jupiter (Guru)",
+                        "age": 16,
+                        "prediction": "The cross of Jupiter is a highly auspicious sign. It indicates a happy union, good family life, and wealth through honorable means.",
+                        "remedy": "Apply saffron (kesar) tilak on your forehead daily to strengthen your Guru."
+                    }
+                }
+            },
+            {
+                "conditions": {
+                    "all": [
+                        { "fact": "mount", "operator": "equal", "value": "jupiter" },
+                        { "fact": "sign", "operator": "equal", "value": "mole" }
+                    ]
+                },
+                "event": {
+                    "type": "reading_match",
+                    "params": {
+                        "planet": "Jupiter (Guru)",
+                        "age": 16,
+                        "prediction": "A mole or spot here suggests obstacles in education or issues with reputation despite your innate wisdom.",
+                        "remedy": "Donate yellow clothes or chana dal to a priest on Thursdays."
+                    }
+                }
+            },
+
+            // --- SUN (SURYA) RULES - Fame/Health (Activation Age: 22) ---
+            {
+                "conditions": {
+                    "all": [
+                        { "fact": "mount", "operator": "equal", "value": "sun" },
+                        { "fact": "sign", "operator": "equal", "value": "star" }
+                    ]
+                },
+                "event": {
+                    "type": "reading_match",
+                    "params": {
+                        "planet": "Sun (Surya)",
+                        "age": 22,
+                        "prediction": "A Star on the Sun mount indicates 'Raj Yoga'. You will receive favor from authority and find fame naturally.",
+                        "remedy": "Offer water to the rising sun daily. Avoid accepting free gifts."
+                    }
+                }
+            },
+            {
+                "conditions": {
+                    "all": [
+                        { "fact": "mount", "operator": "equal", "value": "sun" },
+                        { "fact": "sign", "operator": "equal", "value": "island" }
+                    ]
+                },
+                "event": {
+                    "type": "reading_match",
+                    "params": {
+                        "planet": "Sun (Surya)",
+                        "age": 22,
+                        "prediction": "An Island sign warns of potential eye trouble or public disgrace. Guard your reputation fiercely.",
+                        "remedy": "Throw a copper coin into flowing water for 43 days."
+                    }
+                }
+            },
+
+            // --- SATURN (SHANI) RULES - Career/Karma (Activation Age: 36) ---
+            {
+                "conditions": {
+                    "all": [
+                        { "fact": "mount", "operator": "equal", "value": "saturn" },
+                        { "fact": "sign", "operator": "equal", "value": "vertical_line" }
+                    ]
+                },
+                "event": {
+                    "type": "reading_match",
+                    "params": {
+                        "planet": "Saturn (Shani)",
+                        "age": 36,
+                        "prediction": "A vertical line on Saturn suggests wealth through iron, justice, or property. You are destined to be a self-made person.",
+                        "remedy": "Pour oil on the ground (Chaya Daan) on Saturdays."
+                    }
+                }
+            },
+
+            // --- MERCURY (BUDH) RULES - Business/Intellect (Activation Age: 34) ---
+            {
+                "conditions": {
+                    "all": [
+                        { "fact": "mount", "operator": "equal", "value": "mercury" },
+                        { "fact": "sign", "operator": "equal", "value": "vertical_lines" }
+                    ]
+                },
+                "event": {
+                    "type": "reading_match",
+                    "params": {
+                        "planet": "Mercury (Budh)",
+                        "age": 34,
+                        "prediction": "The 'Healer's Mark' here signifies sharp business acumen and eloquence. Your intellect is a great source of wealth.",
+                        "remedy": "Clean your teeth with alum (fitkari) or donate green clothes."
+                    }
+                }
+            },
+            
+            // --- FALLBACK RULE (REQUIRED FOR GRACEFUL ERROR HANDLING) ---
+            {
+                "conditions": {
+                    "any": [
+                        { "fact": "mount", "operator": "equal", "value": "jupiter" }, 
+                        { "fact": "mount", "operator": "equal", "value": "sun" },
+                        { "fact": "mount", "operator": "equal", "value": "saturn" },
+                        { "fact": "mount", "operator": "equal", "value": "mercury" }
+                    ]
+                },
+                "event": {
+                    "type": "no_sign_match",
+                    "params": {
+                        "message": "I see the Mount, but the specific sign is unclear. This area typically governs ambition and destiny. Be patient, and the deeper secrets will be revealed."
+                    }
+                }
+            }
+        ];
+
+        // --- 2. THE CUSTOM EXECUTOR (json-rules-engine Lite) ---
+        class RulesEngineLite {
+            constructor(rules) {
+                this.rules = rules;
+            }
+
+            run(facts) {
+                for (const rule of this.rules) {
+                    const conditions = rule.conditions;
+
+                    if (conditions.all) {
+                        // Check if ALL conditions in the 'all' array are true
+                        const isMatch = conditions.all.every(condition => {
+                            if (condition.operator !== 'equal') return false;
+
+                            const factValue = facts[condition.fact];
+                            return factValue === condition.value;
+                        });
+
+                        if (isMatch) return rule.event;
+                    }
+                    if (conditions.any) {
+                        // Execute fallback rule if mount is found, but a specific rule was missed
+                        const isMatch = conditions.any.some(condition => {
+                            if (condition.operator !== 'equal') return false;
+                            const factValue = facts[condition.fact];
+                            return factValue === condition.value;
+                        });
+                        
+                        // Execute fallback rule if mount is found AND no specific sign was detected
+                        if (isMatch && facts.sign === null) return rule.event; 
+                    }
+                }
+                return null;
+            }
+        }
+        
+        // --- 3. INTENT PARSER (Simulates LLM/Vision Fact Generation) ---
+        class IntentParser {
+            // Fact mapping tables (used for converting chat to rules engine input)
+            constructor() {
+                this.keywords = {
+                    mounts: { "jupiter": ["jupiter", "index finger", "guru"], "sun": ["sun", "ring finger", "apollo"], "saturn": ["saturn", "middle finger", "fate"], "mercury": ["mercury", "little finger", "pinky"] },
+                    signs: { "cross": ["cross", "x"], "star": ["star"], "island": ["island", "circle"], "mole": ["mole", "spot"], "vertical_line": ["vertical line", "straight line"], "vertical_lines": ["multiple lines", "healing lines", "vertical lines"], "net": ["net", "grille", "grid"] }
+                };
+            }
+
+            // This simulates the AI/CV identifying the mount and sign from either text or image data
+            parse(text) {
+                const lower = text.toLowerCase();
+                let detectedMount = null;
+                let detectedSign = null;
+
+                for (const [key, words] of Object.entries(this.keywords.mounts)) {
+                    if (words.some(w => lower.includes(w))) detectedMount = key;
+                }
+                for (const [key, words] of Object.entries(this.keywords.signs)) {
+                    if (words.some(w => lower.includes(w))) detectedSign = key;
+                }
+                
+                return { mount: detectedMount, sign: detectedSign };
+            }
+        }
+
+        // --- 4. GLOBAL SETUP AND EVENT LISTENERS ---
+        const engine = new RulesEngineLite(LAL_KITAB_RULES_JSON);
+        const parser = new IntentParser();
+        
+        const chatMessages = document.getElementById('chat-messages');
+        const userInput = document.getElementById('user-input');
+
+        // Main logic to process user input and format the output
+        function sendMessage() {
+            const text = userInput.value.trim();
+            if (!text) return;
+
+            addUserMessage(text);
+            userInput.value = '';
+            showTyping();
+
+            setTimeout(() => {
+                removeTyping();
+                
+                // 1. Generate Facts (the Input)
+                const facts = parser.parse(text);
+
+                // 2. Run Rules Engine (The Execution)
+                const event = engine.run(facts);
+                
+                let responseHTML;
+
+                if (event && event.type === 'reading_match') {
+                    const result = event.params;
+                    responseHTML = `
+                        <span class="text-amber-500 font-bold uppercase text-xs tracking-widest">${result.planet}</span>
+                        <p class="text-gray-400 text-[10px] mb-2">Activation Age: ${result.age}</p>
+                        <p class="mb-3">${result.prediction}</p>
+                        <div class="bg-amber-900/20 border-l-2 border-amber-500 p-2 mt-2">
+                            <p class="text-xs text-amber-200"><strong>Lal Kitab Remedy:</strong> ${result.remedy}</p>
+                        </div>
+                    `;
+                } else if (event && event.type === 'no_sign_match') {
+                     responseHTML = `<p>${event.params.message}</p><p class="text-gray-500 text-sm mt-3">Try asking about another sign like <strong>Star, Cross, or Vertical Line</strong>.</p>`;
+                } else {
+                    responseHTML = "I sense your inquiry, but I need clearer data. Please specify both a **Mount** (e.g., Jupiter) and a **Sign** (e.g., Cross) found on your palm.";
+                }
+
+                addAiMessage(responseHTML);
+
+            }, 1200);
+        }
+        
+        // --- HELPER FUNCTIONS (PRESERVED) ---
         function scrollToReader() {
             document.getElementById('reader-app').scrollIntoView({ behavior: 'smooth' });
         }
 
-        // Added Scroll to Services function
         function scrollToServices() {
             document.getElementById('readings').scrollIntoView({ behavior: 'smooth' });
         }
 
-        // Mobile Menu
         function toggleMobileMenu() {
             const menu = document.getElementById('mobile-menu');
             const body = document.body;
@@ -602,45 +808,35 @@
             }
         }
 
-        // Simulation Logic
-        const chatMessages = document.getElementById('chat-messages');
-        const userInput = document.getElementById('user-input');
-
         function startSimulation() {
-            const uploadState = document.getElementById('upload-state');
+            const fileInput = document.getElementById('file-upload');
             const handImage = document.getElementById('hand-image');
+
+            if (!handImage.src || handImage.style.opacity === '0') {
+                 addAiMessage("Please upload a palm photo first. Tap the scanning area to select your file.");
+                 return;
+            }
+
             const scannerLine = document.getElementById('scanner-line');
             const resultIdle = document.getElementById('result-idle');
             const resultLoading = document.getElementById('result-loading');
             const chatInterface = document.getElementById('chat-interface');
             const btnScan = document.getElementById('btn-scan');
 
-            // 1. UI Reset
+            // UI Transitions
             chatInterface.classList.add('hidden');
             btnScan.disabled = true;
-            btnScan.innerText = 'Scanning...';
+            btnScan.innerText = 'Analyzing...'; // Changed to Analyzing since it's already uploaded
             btnScan.classList.add('opacity-50', 'cursor-not-allowed');
-
-            // 2. Show Image
-            uploadState.style.opacity = '0';
-            setTimeout(() => {
-                handImage.style.opacity = '0.8';
-            }, 200);
-
-            // 3. Start Scanner
-            setTimeout(() => {
-                scannerLine.style.display = 'block';
-            }, 800);
-
-            // 4. Show Loading on Right Panel
-            resultIdle.style.opacity = '0';
+            
+            setTimeout(() => { scannerLine.style.display = 'block'; }, 100);
             setTimeout(() => {
                 resultIdle.style.display = 'none';
                 resultLoading.style.opacity = '1';
                 resultLoading.style.pointerEvents = 'auto';
-            }, 500);
+            }, 300);
 
-            // 5. Process and Show Results (Start Chat)
+            // Finalize Scan
             setTimeout(() => {
                 scannerLine.style.display = 'none';
                 resultLoading.style.opacity = '0';
@@ -653,8 +849,7 @@
                     btnScan.innerText = 'Analyze Again';
                     btnScan.classList.remove('opacity-50', 'cursor-not-allowed');
                     
-                    // Initial AI Message
-                    addAiMessage("The lines of your palm tell a fascinating story. Your Life Line is deep and unbroken, suggesting great vitality. <br><br>However, your Heart Line forks beneath Jupiter. What specific guidance do you seek today?");
+                    addAiMessage("The ancient grid is active. I have analyzed the topography of your palm. <br><br>Now, try asking about the signs on your hand, like the **Star on the Sun Mount** or the **Cross on Jupiter**.");
                 }, 300);
             }, 4000);
         }
@@ -664,11 +859,13 @@
             const handImage = document.getElementById('hand-image');
             const scannerLine = document.getElementById('scanner-line');
             const resultIdle = document.getElementById('result-idle');
-            const resultLoading = document.getElementById('result-loading');
+            const fileInput = document.getElementById('file-upload');
+            // const resultLoading = document.getElementById('result-loading'); // Not needed for reset
             const chatInterface = document.getElementById('chat-interface');
             
-            // Clear chat
+            // Clear chat and file input
             chatMessages.innerHTML = '';
+            fileInput.value = ''; // Clears the selected file
 
             // Reset Image Area
             scannerLine.style.display = 'none';
@@ -679,13 +876,12 @@
             chatInterface.classList.add('opacity-0');
             setTimeout(() => {
                 chatInterface.classList.add('hidden');
-                resultLoading.style.opacity = '0';
+                // resultLoading.style.opacity = '0'; // Not needed for reset
                 resultIdle.style.display = 'flex';
                 setTimeout(() => { resultIdle.style.opacity = '1'; }, 100);
             }, 300);
         }
-
-        // Chat Functions
+        
         function addAiMessage(text) {
             const bubble = document.createElement('div');
             bubble.className = 'chat-bubble-ai';
@@ -719,38 +915,34 @@
         function scrollToBottom() {
             chatMessages.scrollTop = chatMessages.scrollHeight;
         }
+        
+        // --- NEW: FILE UPLOAD LOGIC ---
 
-        function sendMessage() {
-            const text = userInput.value.trim();
-            if (!text) return;
+        // 1. Trigger hidden file input when scan area is clicked
+        document.getElementById('scan-area').addEventListener('click', () => {
+            document.getElementById('file-upload').click();
+        });
 
-            addUserMessage(text);
-            userInput.value = '';
-
-            // Simulate AI delay and response
-            showTyping();
-            setTimeout(() => {
-                removeTyping();
-                const response = generateMockResponse(text);
-                addAiMessage(response);
-            }, 1500);
-        }
-
-        function generateMockResponse(input) {
-            const lowerInput = input.toLowerCase();
-            if (lowerInput.includes('love') || lowerInput.includes('relationship')) {
-                return "Your heart line shows a capacity for deep connection. The slight curvature suggests you are guarded, but a significant union aligns with the influence of Venus in your chart. Could you share your birth month for more clarity?";
-            } else if (lowerInput.includes('career') || lowerInput.includes('job') || lowerInput.includes('money')) {
-                return "Your Head Line is remarkably straight, indicating a logical approach to finance. I see a potential fork indicating a dual career path or side venture. Are you currently considering a change in direction?";
-            } else if (lowerInput.includes('health') || lowerInput.includes('life')) {
-                return "The depth of your Life Line is promising. It wraps well around the Mount of Venus, indicating strong vitality. However, subtle stress lines suggest a need for grounding rituals.";
-            } else if (lowerInput.match(/\d/)) { // Checks for numbers (like dates)
-                return "Thank you. With this planetary alignment, the reading becomes clearer. The coming cycle favors introspection and preparation for a major shift in the next 3 months.";
-            } else {
-                return "The stars are listening. Your palm suggests a period of transition. To refine this further, focus on your dominant hand's fate line. What is your primary concern at this moment?";
+        // 2. Load the selected file and display it
+        document.getElementById('file-upload').addEventListener('change', function(event) {
+            const handImage = document.getElementById('hand-image');
+            const uploadState = document.getElementById('upload-state');
+            const btnScan = document.getElementById('btn-scan');
+            
+            if (event.target.files && event.target.files[0]) {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    handImage.src = e.target.result;
+                    handImage.style.opacity = '0.8'; 
+                    uploadState.style.opacity = '0';
+                    btnScan.disabled = false;
+                    btnScan.innerText = 'Analyze Palm';
+                    btnScan.classList.remove('opacity-50', 'cursor-not-allowed');
+                };
+                reader.readAsDataURL(event.target.files[0]);
             }
-        }
-
+        });
+        
         // Allow 'Enter' key to send
         userInput.addEventListener('keypress', function (e) {
             if (e.key === 'Enter') {
