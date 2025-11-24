@@ -566,6 +566,28 @@
             function safeGet(id) { return document.getElementById(id) || null; }
             function safeAddListener(id, ev, fn) { const el = safeGet(id); if (el) el.addEventListener(ev, fn); }
 
+            // restore global helpers (so inline onclicks work)
+            window.scrollToReader = function() {
+                const el = document.getElementById('reader-app');
+                if (el) el.scrollIntoView({ behavior: 'smooth' });
+            };
+            window.scrollToServices = function() {
+                const el = document.getElementById('readings');
+                if (el) el.scrollIntoView({ behavior: 'smooth' });
+            };
+            window.toggleMobileMenu = function() {
+                const menu = document.getElementById('mobile-menu');
+                const body = document.body;
+                if (!menu) return;
+                if (menu.classList.contains('opacity-0')) {
+                    menu.classList.remove('opacity-0', 'pointer-events-none');
+                    body.classList.add('overflow-hidden');
+                } else {
+                    menu.classList.add('opacity-0', 'pointer-events-none');
+                    body.classList.remove('overflow-hidden');
+                }
+            };
+
             const chatMessages = safeGet('chat-messages');
             const userInput = safeGet('user-input');
             const btnScan = safeGet('btn-scan');
@@ -585,7 +607,7 @@
             }
             function removeTyping() { const t = document.getElementById('typing-indicator'); if (t) t.remove(); }
 
-            // sendMessage: prefers server endpoint (/api/interpret). server is authoritative (holds rulebook and model API key)
+            // sendMessage: prefers server endpoint (Netlify function) — server is authoritative (holds rulebook and model API key)
             async function sendMessage() {
                 if (!userInput) return;
                 const text = (userInput.value||'').trim();
@@ -595,7 +617,8 @@
                 showTyping();
 
                 try {
-                    const res = await fetch('/api/interpret', {
+                    // IMPORTANT: call the Netlify functions endpoint path (server-side)
+                    const res = await fetch('/.netlify/functions/interpret', {
                         method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ text })
                     });
 
@@ -605,7 +628,7 @@
                         const body = await res.text().catch(()=>null);
                         addAiMessage(`<p>Server error (${res.status}). Using local fallback parser. ${body?('<br>'+body):''}</p>`);
                         const facts = parser.parse(text);
-                        addAiMessage(`<p>Local fallback — mount: <strong>${facts.mount||'unknown'}</strong>, sign: <strong>${facts.sign||'unknown'}</strong></p><p class="text-gray-500 text-sm mt-3">Enable /api/interpret on your server for full Lal Kitab readings.</p>`);
+                        addAiMessage(`<p>Local fallback — mount: <strong>${facts.mount||'unknown'}</strong>, sign: <strong>${facts.sign||'unknown'}</strong></p><p class="text-gray-500 text-sm mt-3">Enable /.netlify/functions/interpret on your server for full Lal Kitab readings.</p>`);
                         return;
                     }
 
@@ -633,9 +656,9 @@
                 } catch (err) {
                     removeTyping();
                     console.error('interpret fetch failed', err);
-                    addAiMessage('<p>Network error while calling /api/interpret — using local fallback.</p>');
+                    addAiMessage('<p>Network error while calling /.netlify/functions/interpret — using local fallback.</p>');
                     const facts = parser.parse(text);
-                    addAiMessage(`<p>Local fallback — mount: <strong>${facts.mount||'unknown'}</strong>, sign: <strong>${facts.sign||'unknown'}</strong></p><p class="text-gray-500 text-sm mt-3">Ensure your Netlify function /api/interpret is deployed and reachable.</p>`);
+                    addAiMessage(`<p>Local fallback — mount: <strong>${facts.mount||'unknown'}</strong>, sign: <strong>${facts.sign||'unknown'}</strong></p><p class="text-gray-500 text-sm mt-3">Ensure your Netlify function is deployed and reachable.</p>`);
                 }
             }
 
